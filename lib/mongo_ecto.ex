@@ -576,6 +576,8 @@ defmodule Mongo.Ecto do
         :error
     end
   end
+  defp from_datetime(_),
+    do: :error
 
   defp dump_objectid(_), do: :error
 
