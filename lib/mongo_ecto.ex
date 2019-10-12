@@ -420,10 +420,11 @@ defmodule Mongo.Ecto do
       end
 
     # Rename the `:mongo_url` key so that the driver can parse it
-    opts = Enum.map(opts, fn
-      {:mongo_url, value} -> {:url, value}
-      {key, value} -> {key, value}
-    end)
+    opts =
+      Enum.map(opts, fn
+        {:mongo_url, value} -> {:url, value}
+        {key, value} -> {key, value}
+      end)
 
     opts = [name: pool_name] ++ Keyword.delete(opts, :pool) ++ pool_opts
 
@@ -576,10 +577,11 @@ defmodule Mongo.Ecto do
         :error
     end
   end
-  defp from_datetime(_),
-    do: :error
 
   defp dump_objectid(_), do: :error
+
+  defp from_datetime(_),
+    do: :error
 
   @doc false
   def autogenerate(:id), do: raise("MongoDB adapter does not support `:id` type as primary key")
@@ -825,6 +827,7 @@ defmodule Mongo.Ecto do
 
   special_regex = %BSON.Regex{pattern: "\\.system|\\$", options: ""}
   migration_regex = %BSON.Regex{pattern: @migration, options: ""}
+
   @list_collections_query [
     "$and": [[name: ["$not": special_regex]], [name: ["$not": migration_regex]]]
   ]
@@ -849,7 +852,8 @@ defmodule Mongo.Ecto do
           repo
           |> command(%{listCollections: 1}, opts)
           |> get_in(["cursor", "firstBatch"])
-          |> Enum.filter(&(&1["type"] == "collection")) # exclude mongo views which were introduced in version 3.4
+          # exclude mongo views which were introduced in version 3.4
+          |> Enum.filter(&(&1["type"] == "collection"))
           |> Enum.map(&Map.fetch!(&1, "name"))
           |> Enum.reject(&String.contains?(&1, "system."))
 

@@ -40,7 +40,6 @@ defmodule Mongo.Ecto.NormalizedQuery do
   end
 
   alias Mongo.Ecto.Conversions
-  alias Ecto.Query.Tagged
   alias Ecto.Query
 
   defmacrop is_op(op) do
@@ -339,9 +338,6 @@ defmodule Mongo.Ecto.NormalizedQuery do
   defp command(:update, values, pk) do
     ["$set": values |> value(pk, "update command") |> map_unless_empty]
   end
-
-  defp both_nil(nil, nil), do: true
-  defp both_nil(_, _), do: false
 
   defp offset_limit(nil, _params, _pk, _query, _where), do: nil
 

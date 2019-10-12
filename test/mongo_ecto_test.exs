@@ -16,11 +16,14 @@ defmodule Mongo.EctoTest do
 
   test "truncate/2" do
     TestRepo.insert!(%Post{})
+
     case System.get_env("MONGOVERSION") do
       version when version in ["2.6.12", "3.0.15"] ->
         nil
+
       _ ->
-        Mongo.Ecto.command(TestRepo, %{create: "view", viewOn: "posts", pipeline: []}) # test with Views
+        # test with Views
+        Mongo.Ecto.command(TestRepo, %{create: "view", viewOn: "posts", pipeline: []})
     end
 
     Mongo.Ecto.truncate(TestRepo)
